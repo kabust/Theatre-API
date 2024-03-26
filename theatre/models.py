@@ -39,6 +39,13 @@ class Play(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
 
+    @property
+    def description_preview(self):
+        return self.description[:50].strip() + "..."
+
+    def __str__(self):
+        return self.title
+
 
 class Performance(models.Model):
     play = models.ForeignKey(
