@@ -68,7 +68,11 @@ class Performance(models.Model):
 
 class Reservation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
-    user = get_user_model()
+    user = models.ForeignKey(
+        to=get_user_model(),
+        on_delete=models.CASCADE,
+        related_name="reservations"
+    )
 
     def __str__(self):
         return f"Reserved at {self.created_at} by {self.user}"
