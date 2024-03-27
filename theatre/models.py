@@ -38,6 +38,8 @@ class TheatreHall(models.Model):
 class Play(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
+    actors = models.ManyToManyField(to=Actor, related_name="plays")
+    genres = models.ManyToManyField(to=Genre, related_name="plays")
 
     @property
     def description_preview(self):

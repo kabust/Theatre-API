@@ -19,7 +19,7 @@ from theatre.serializers import (
     PerformanceSerializer,
     PerformanceListSerializer,
     PlayListSerializer,
-    ReservationSerializer, TicketSerializer, TicketListSerializer, ReservationListSerializer
+    ReservationSerializer, TicketSerializer, TicketListSerializer, ReservationListSerializer, PlayDetailSerializer
 )
 
 
@@ -45,12 +45,20 @@ class PlayViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == "list":
             return PlayListSerializer
+        if self.action == "retrieve":
+            return PlayDetailSerializer
         return PlaySerializer
+
+
+class PerformancePagination(PageNumberPagination):
+    page_size = 10
+    max_page_size = 20
 
 
 class PerformanceViewSet(viewsets.ModelViewSet):
     queryset = Performance.objects.select_related("play", "theatre_hall")
     serializer_class = PerformanceSerializer
+    pagination_class = PerformancePagination
 
     def get_serializer_class(self):
         if self.action in ("list", "retrieve"):
@@ -59,8 +67,8 @@ class PerformanceViewSet(viewsets.ModelViewSet):
 
 
 class ReservationPagination(PageNumberPagination):
-    page_size = 5
-    max_page_size = 20
+    page_size = 1
+    max_page_size = 10
 
 
 class ReservationViewSet(viewsets.ModelViewSet):
@@ -74,3 +82,6 @@ class ReservationViewSet(viewsets.ModelViewSet):
         if self.action == "list":
             return ReservationListSerializer
         return ReservationSerializer
+
+    # def create(self, request, *args, **kwargs):
+    #     pass
