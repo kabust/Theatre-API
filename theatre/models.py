@@ -1,5 +1,9 @@
+import os
+import uuid
+
 from django.contrib.auth import get_user_model
 from django.db import models
+from django.utils.text import slugify
 from rest_framework.exceptions import ValidationError
 
 
@@ -35,11 +39,19 @@ class TheatreHall(models.Model):
         return f"{self.name} - {self.capacity} seats"
 
 
+def play_image_file_path(instance, filename):
+    _, extension = os.path.splitext(filename)
+    filename = f"{slugify(instance.title)}-{uuid.uuid4()}{extension}"
+
+    return os.path.join("uploads/movies/", filename)
+
+
 class Play(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     actors = models.ManyToManyField(to=Actor, related_name="plays")
     genres = models.ManyToManyField(to=Genre, related_name="plays")
+    image = models.ImageField(null=True, upload_to=play_image_file_path)
 
     @property
     def description_preview(self):
@@ -47,6 +59,9 @@ class Play(models.Model):
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        ordering = ["title"]
 
 
 class Performance(models.Model):

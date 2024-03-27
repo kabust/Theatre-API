@@ -10,7 +10,6 @@ from theatre.models import (
     Play,
     Performance,
     Reservation,
-    Ticket
 )
 
 from theatre.serializers import (
