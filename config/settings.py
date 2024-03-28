@@ -86,10 +86,10 @@ SIMPLE_JWT = {
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Theatre API',
-    'DESCRIPTION': 'API to manage seats reservation for theatre performances',
-    'VERSION': '1.0.0',
-    'SERVE_INCLUDE_SCHEMA': False,
+    "TITLE": "Theatre API",
+    "DESCRIPTION": "API to manage seats reservation for theatre performances",
+    "VERSION": "1.0.0",
+    "SERVE_INCLUDE_SCHEMA": False,
 }
 
 # Database

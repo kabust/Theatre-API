@@ -62,13 +62,11 @@ class AuthenticatedPlayApiTests(TestCase):
     def test_retrieve_play(self):
         play = sample_play()
         play.genres.add(Genre.objects.create(name="Genre"))
-        play.actors.add(
-            Actor.objects.create(first_name="John", last_name="Doe")
+        play.actors.add(Actor.objects.create(
+            first_name="John", last_name="Doe")
         )
 
-        res = self.client.get(
-            reverse("theatre:plays-detail", args=[play.id])
-        )
+        res = self.client.get(reverse("theatre:plays-detail", args=[play.id]))
 
         serializer = PlayDetailSerializer(play)
 
@@ -76,10 +74,7 @@ class AuthenticatedPlayApiTests(TestCase):
         self.assertEqual(res.data, serializer.data)
 
     def test_create_play_forbidden(self):
-        payload = {
-            "title": "New play",
-            "description": "Sample"
-        }
+        payload = {"title": "New play", "description": "Sample"}
         res = self.client.post(PLAY_URL, payload)
 
         self.assertEqual(res.status_code, status.HTTP_403_FORBIDDEN)
@@ -93,9 +88,7 @@ class AdminPlayApiTests(TestCase):
         )
         self.client.force_authenticate(self.user)
 
-        self.actor = Actor.objects.create(
-            first_name="John", last_name="Doe"
-        )
+        self.actor = Actor.objects.create(first_name="John", last_name="Doe")
         self.genre = Genre.objects.create(name="Genre")
 
     def test_create_play(self):
@@ -103,7 +96,7 @@ class AdminPlayApiTests(TestCase):
             "title": "New play 2",
             "description": "Sample",
             "actors": [self.actor.id],
-            "genres": [self.genre.id]
+            "genres": [self.genre.id],
         }
         res = self.client.post(PLAY_URL, payload)
 

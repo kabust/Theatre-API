@@ -23,30 +23,35 @@ from theatre.serializers import (
     PlayListSerializer,
     ReservationSerializer,
     ReservationListSerializer,
-    PlayDetailSerializer, PerformanceDetailSerializer
+    PlayDetailSerializer,
+    PerformanceDetailSerializer,
 )
 
 
 class ActorViewSet(viewsets.ModelViewSet):
     """Actors endpoints to manage actor instances"""
+
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
 
 
 class GenreViewSet(viewsets.ModelViewSet):
     """Genres endpoints to manage genre instances"""
+
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
 
 
 class TheatreHallViewSet(viewsets.ModelViewSet):
     """Theatre_halls endpoints to manage instances of theatre hall"""
+
     queryset = TheatreHall.objects.all()
     serializer_class = TheatreHallSerializer
 
 
 class PlayViewSet(viewsets.ModelViewSet):
     """Plays endpoints to manage play instances"""
+
     queryset = Play.objects.prefetch_related("genres", "actors")
     serializer_class = PlaySerializer
 
@@ -118,15 +123,13 @@ class PerformancePagination(PageNumberPagination):
 
 class PerformanceViewSet(viewsets.ModelViewSet):
     """Performances endpoints to manage performance instances"""
+
     queryset = (
         Performance.objects.
         select_related("play", "theatre_hall").
-        annotate(
-            tickets_available=(
-                F("theatre_hall__rows") * F("theatre_hall__seats_in_row")
-                - Count("tickets")
-            )
-        )
+        annotate(tickets_available=(
+                F("theatre_hall__rows") * F("theatre_hall__seats_in_row") - Count("tickets")
+            ))
     )
     serializer_class = PerformanceSerializer
     pagination_class = PerformancePagination
@@ -148,6 +151,7 @@ class ReservationPagination(PageNumberPagination):
 
 class ReservationViewSet(viewsets.ModelViewSet):
     """Reservations endpoints to manage reservation instances"""
+
     queryset = Reservation.objects.prefetch_related(
         "tickets__performance__theatre_hall", "tickets__performance__play"
     )

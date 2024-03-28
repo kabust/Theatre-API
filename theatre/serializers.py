@@ -6,7 +6,9 @@ from theatre.models import (
     Genre,
     TheatreHall,
     Play,
-    Performance, Reservation, Ticket
+    Performance,
+    Reservation,
+    Ticket,
 )
 
 
@@ -48,7 +50,9 @@ class PlayDetailSerializer(PlaySerializer):
 
 
 class PlayListSerializer(PlayDetailSerializer):
-    description = serializers.CharField(source="description_preview", read_only=True)
+    description = serializers.CharField(
+        source="description_preview", read_only=True
+    )
 
 
 class PerformanceSerializer(serializers.ModelSerializer):
@@ -68,9 +72,7 @@ class PerformanceDetailSerializer(PerformanceSerializer):
     play = PlayListSerializer(read_only=True)
     theatre_hall = TheatreHallSerializer(read_only=True)
     taken_places = serializers.StringRelatedField(
-        many=True,
-        read_only=True,
-        source="tickets"
+        many=True, read_only=True, source="tickets"
     )
 
 
