@@ -150,7 +150,7 @@ class Ticket(models.Model):
 
     def __str__(self):
         return (
-            f"{str(self.performance)} (row: {self.row}, seat: {self.seat})"
+            f"row: {self.row}, seat: {self.seat}"
         )
 
     class Meta:
