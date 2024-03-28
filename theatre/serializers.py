@@ -64,11 +64,21 @@ class PerformanceListSerializer(PerformanceSerializer):
     tickets_available = serializers.IntegerField(read_only=True)
 
 
+class PerformanceDetailSerializer(PerformanceSerializer):
+    play = PlayListSerializer(read_only=True)
+    theatre_hall = TheatreHallSerializer(read_only=True)
+    taken_places = serializers.StringRelatedField(
+        many=True,
+        read_only=True,
+        source="tickets"
+    )
+
+
 class TicketSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ticket
-        fields = "__all__"
+        fields = ("id", "row", "seat", "performance")
 
 
 class TicketListSerializer(TicketSerializer):
@@ -80,7 +90,7 @@ class ReservationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Reservation
-        fields = ("created_at", "tickets")
+        fields = ("id", "created_at", "tickets")
 
     def create(self, validated_data):
         with transaction.atomic():
