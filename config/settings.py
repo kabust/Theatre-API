@@ -76,6 +76,7 @@ REST_FRAMEWORK = {
         "theatre.permissions.IsAdminOrIfAuthenticatedReadOnly",
     ),
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_THROTTLE_RATES": {"anon": "10/day", "user": "30/day"},
 }
 
 SIMPLE_JWT = {
