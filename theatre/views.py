@@ -108,7 +108,7 @@ class PlayViewSet(viewsets.ModelViewSet):
         if self.action == "retrieve":
             return PlayDetailSerializer
 
-        return PlaySerializer
+        return self.serializer_class
 
 
 class PerformancePagination(PageNumberPagination):
@@ -138,7 +138,7 @@ class PerformanceViewSet(viewsets.ModelViewSet):
         if self.action == "retrieve":
             return PerformanceDetailSerializer
 
-        return PerformanceSerializer
+        return self.serializer_class
 
 
 class ReservationPagination(PageNumberPagination):
@@ -162,7 +162,8 @@ class ReservationViewSet(viewsets.ModelViewSet):
     def get_serializer_class(self):
         if self.action == "list":
             return ReservationListSerializer
-        return ReservationSerializer
+
+        return self.serializer_class
 
     def perform_create(self, serializer):
         serializer.save(user=self.request.user)
