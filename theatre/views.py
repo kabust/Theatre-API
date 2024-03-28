@@ -1,4 +1,5 @@
 from django.db.models import F, Count
+from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import viewsets
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
@@ -22,26 +23,30 @@ from theatre.serializers import (
     PlayListSerializer,
     ReservationSerializer,
     ReservationListSerializer,
-    PlayDetailSerializer
+    PlayDetailSerializer, PerformanceDetailSerializer
 )
 
 
 class ActorViewSet(viewsets.ModelViewSet):
+    """Actors endpoints to manage actor instances"""
     queryset = Actor.objects.all()
     serializer_class = ActorSerializer
 
 
 class GenreViewSet(viewsets.ModelViewSet):
+    """Genres endpoints to manage genre instances"""
     queryset = Genre.objects.all()
     serializer_class = GenreSerializer
 
 
 class TheatreHallViewSet(viewsets.ModelViewSet):
+    """Theatre_halls endpoints to manage instances of theatre hall"""
     queryset = TheatreHall.objects.all()
     serializer_class = TheatreHallSerializer
 
 
 class PlayViewSet(viewsets.ModelViewSet):
+    """Plays endpoints to manage play instances"""
     queryset = Play.objects.prefetch_related("genres", "actors")
     serializer_class = PlaySerializer
 
@@ -71,6 +76,31 @@ class PlayViewSet(viewsets.ModelViewSet):
 
         return queryset.distinct()
 
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "actors",
+                type={"type": "list", "items": {"type": "number"}},
+                description="Filter by Actors IDs… (ex. ?actors=1,3)",
+                required=False,
+            ),
+            OpenApiParameter(
+                "genres",
+                type={"type": "list", "items": {"type": "number"}},
+                description="Filter by Genres IDs… (ex. ?genres=2,5)",
+                required=False,
+            ),
+            OpenApiParameter(
+                "title",
+                type=str,
+                description="Filter by Title…",
+                required=False,
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
+
     def get_serializer_class(self):
         if self.action == "list":
             return PlayListSerializer
@@ -87,6 +117,7 @@ class PerformancePagination(PageNumberPagination):
 
 
 class PerformanceViewSet(viewsets.ModelViewSet):
+    """Performances endpoints to manage performance instances"""
     queryset = (
         Performance.objects.
         select_related("play", "theatre_hall").
@@ -101,8 +132,12 @@ class PerformanceViewSet(viewsets.ModelViewSet):
     pagination_class = PerformancePagination
 
     def get_serializer_class(self):
-        if self.action in ("list", "retrieve"):
+        if self.action == "list":
             return PerformanceListSerializer
+
+        if self.action == "retrieve":
+            return PerformanceDetailSerializer
+
         return PerformanceSerializer
 
 
@@ -112,6 +147,7 @@ class ReservationPagination(PageNumberPagination):
 
 
 class ReservationViewSet(viewsets.ModelViewSet):
+    """Reservations endpoints to manage reservation instances"""
     queryset = Reservation.objects.prefetch_related(
         "tickets__performance__theatre_hall", "tickets__performance__play"
     )
