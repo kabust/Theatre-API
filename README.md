@@ -52,6 +52,7 @@ python manage.py createsuperuser
 * Creating plays with actors and genres
 * Plays filtering
 * Pagination (Reservations and Performances)
+* Throttling
 * Media files handling (Plays with images)
 
 ## Demo
