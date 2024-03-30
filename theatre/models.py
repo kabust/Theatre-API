@@ -1,10 +1,8 @@
-import os
-import uuid
-
 from django.contrib.auth import get_user_model
 from django.db import models
-from django.utils.text import slugify
 from rest_framework.exceptions import ValidationError
+
+from theatre.utils import play_image_file_path
 
 
 class Actor(models.Model):
@@ -39,13 +37,6 @@ class TheatreHall(models.Model):
         return f"{self.name} - {self.capacity} seats"
 
 
-def play_image_file_path(instance, filename):
-    _, extension = os.path.splitext(filename)
-    filename = f"{slugify(instance.title)}-{uuid.uuid4()}{extension}"
-
-    return os.path.join("uploads/movies/", filename)
-
-
 class Play(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
@@ -55,7 +46,9 @@ class Play(models.Model):
 
     @property
     def description_preview(self):
-        return self.description[:50].strip() + "..."
+        if len(self.description) > 50:
+            return self.description[:50].strip() + "..."
+        return self.description
 
     def __str__(self):
         return self.title
@@ -146,5 +139,10 @@ class Ticket(models.Model):
         return f"row: {self.row}, seat: {self.seat}"
 
     class Meta:
-        unique_together = ("performance", "row", "seat")
+        constraints = [
+            models.UniqueConstraint(
+                fields=["performance", "row", "seat"],
+                name="performance_row_seat_unique"
+            )
+        ]
         ordering = ["row", "seat"]
