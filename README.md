@@ -9,7 +9,7 @@ git clone https://github.com/kabust/Theatre-API.git
 cd Theatre-API
 ```
 
-If you want to run it withoud Docker do the following:
+If you want to run it without Docker do the following:
 ```shell
 python -m venv venv
 pip install -r requirements.txt
@@ -36,15 +36,25 @@ docker exec -it <id> sh
 python manage.py createsuperuser
 ```
 
+<i>If you don't want to create a new superuser you can use the following credentials</i>
+
+<i>To log in as a regular user:</i>
+* <i>Email: customer@test.com</i>
+* <i>Password: Sandbox!1</i>
+
+<i>To log in as a staff member:</i>
+* <i>Email: admin@test.com</i>
+* <i>Password: Sandbox!1</i>
+
 ## Getting access
 
-* Create new user via /api/user/register/ or use previously created superuser
+* Create a new user via /api/user/register/ or use a previously created superuser
 * Get access token via /api/user/token/ (it will be active for 10 minutes)
 
 ## Features
 
 * JWT authentication
-* Different permissions for unauthenticated, regular and admin users
+* Different permissions for unauthenticated, regular, and admin users
 * Admin panel (/admin/)
 * Browsable API
 * Documentation (/api/doc/swagger/)
