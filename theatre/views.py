@@ -1,7 +1,6 @@
 from django.db.models import F, Count
 from drf_spectacular.utils import OpenApiParameter, extend_schema
 from rest_framework import viewsets
-from rest_framework.pagination import PageNumberPagination
 from rest_framework.permissions import IsAuthenticated
 
 from theatre.models import (
@@ -12,6 +11,7 @@ from theatre.models import (
     Performance,
     Reservation,
 )
+from theatre.pagination import PerformancePagination, ReservationPagination
 
 from theatre.serializers import (
     ActorSerializer,
@@ -116,11 +116,6 @@ class PlayViewSet(viewsets.ModelViewSet):
         return self.serializer_class
 
 
-class PerformancePagination(PageNumberPagination):
-    page_size = 10
-    max_page_size = 20
-
-
 class PerformanceViewSet(viewsets.ModelViewSet):
     """Performances endpoints to manage performance instances"""
 
@@ -142,11 +137,6 @@ class PerformanceViewSet(viewsets.ModelViewSet):
             return PerformanceDetailSerializer
 
         return self.serializer_class
-
-
-class ReservationPagination(PageNumberPagination):
-    page_size = 1
-    max_page_size = 10
 
 
 class ReservationViewSet(viewsets.ModelViewSet):
