@@ -96,7 +96,9 @@ class ReservationSerializer(serializers.ModelSerializer):
             reservation = Reservation.objects.create(**validated_data)
             tickets = []
             for ticket_data in tickets_data:
-                tickets.append(Ticket(reservation=reservation, **ticket_data))
+                ticket = Ticket(reservation=reservation, **ticket_data)
+                ticket.full_clean()
+                tickets.append(ticket)
             Ticket.objects.bulk_create(tickets)
 
             return reservation
