@@ -1,8 +1,9 @@
 from django.db.models import F, Count
-from drf_spectacular.utils import OpenApiParameter, extend_schema
+from drf_spectacular.utils import extend_schema
 from rest_framework import viewsets
 from rest_framework.permissions import IsAuthenticated
 
+from theatre.docs_config import PLAY_EXTEND_SCHEMA
 from theatre.models import (
     Actor,
     Genre,
@@ -81,28 +82,7 @@ class PlayViewSet(viewsets.ModelViewSet):
 
         return queryset.distinct()
 
-    @extend_schema(
-        parameters=[
-            OpenApiParameter(
-                "actors",
-                type={"type": "list", "items": {"type": "number"}},
-                description="Filter by Actors IDs… (ex. ?actors=1,3)",
-                required=False,
-            ),
-            OpenApiParameter(
-                "genres",
-                type={"type": "list", "items": {"type": "number"}},
-                description="Filter by Genres IDs… (ex. ?genres=2,5)",
-                required=False,
-            ),
-            OpenApiParameter(
-                "title",
-                type=str,
-                description="Filter by Title…",
-                required=False,
-            ),
-        ]
-    )
+    @extend_schema(parameters=PLAY_EXTEND_SCHEMA)
     def list(self, request, *args, **kwargs):
         return super().list(request, *args, **kwargs)
 
@@ -119,12 +99,10 @@ class PlayViewSet(viewsets.ModelViewSet):
 class PerformanceViewSet(viewsets.ModelViewSet):
     """Performances endpoints to manage performance instances"""
 
-    queryset = (
-        Performance.objects.
-        select_related("play", "theatre_hall").
-        annotate(tickets_available=(
-                F("theatre_hall__rows") * F("theatre_hall__seats_in_row") - Count("tickets")
-            ))
+    queryset = Performance.objects.select_related("play", "theatre_hall").annotate(
+        tickets_available=(
+            F("theatre_hall__rows") * F("theatre_hall__seats_in_row") - Count("tickets")
+        )
     )
     serializer_class = PerformanceSerializer
     pagination_class = PerformancePagination
