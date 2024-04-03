@@ -66,8 +66,8 @@ python manage.py createsuperuser
 * Media files handling (Plays with images)
 
 ## Demo
-![Demo](demo.png)
-![Docs](docs.png)
+![Demo](images/demo.png)
+![Docs](images/docs.png)
 
 ## Models schema
-![Models schema](schema.jpg)
+![Models schema](images/schema.jpg)
