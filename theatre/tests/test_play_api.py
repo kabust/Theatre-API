@@ -31,9 +31,7 @@ class UnauthenticatedPlayApiTests(TestCase):
 class AuthenticatedPlayApiTests(TestCase):
     def setUp(self):
         self.client = APIClient()
-        self.user = get_user_model().objects.create_user(
-            "test@test.com", "password"
-        )
+        self.user = get_user_model().objects.create_user("test@test.com", "password")
         self.client.force_authenticate(self.user)
 
         for _ in range(5):
@@ -62,9 +60,7 @@ class AuthenticatedPlayApiTests(TestCase):
     def test_retrieve_play(self):
         play = sample_play()
         play.genres.add(Genre.objects.create(name="Genre"))
-        play.actors.add(Actor.objects.create(
-            first_name="John", last_name="Doe")
-        )
+        play.actors.add(Actor.objects.create(first_name="John", last_name="Doe"))
 
         res = self.client.get(reverse("theatre:plays-detail", args=[play.id]))
 

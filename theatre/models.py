@@ -69,16 +69,14 @@ class Performance(models.Model):
     def __str__(self):
         return (
             f'{self.play} in "{self.theatre_hall.name}" '
-            f'Theatre on {self.show_time.date()}'
+            f"Theatre on {self.show_time.date()}"
         )
 
 
 class Reservation(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     user = models.ForeignKey(
-        to=get_user_model(),
-        on_delete=models.CASCADE,
-        related_name="reservations"
+        to=get_user_model(), on_delete=models.CASCADE, related_name="reservations"
     )
 
     def __str__(self):
@@ -142,7 +140,7 @@ class Ticket(models.Model):
         constraints = [
             models.UniqueConstraint(
                 fields=["performance", "row", "seat"],
-                name="performance_row_seat_unique"
+                name="performance_row_seat_unique",
             )
         ]
         ordering = ["row", "seat"]

@@ -44,15 +44,11 @@ class PlayDetailSerializer(PlaySerializer):
     actors = serializers.SlugRelatedField(
         many=True, read_only=True, slug_field="full_name"
     )
-    genres = serializers.SlugRelatedField(
-        many=True, read_only=True, slug_field="name"
-    )
+    genres = serializers.SlugRelatedField(many=True, read_only=True, slug_field="name")
 
 
 class PlayListSerializer(PlayDetailSerializer):
-    description = serializers.CharField(
-        source="description_preview", read_only=True
-    )
+    description = serializers.CharField(source="description_preview", read_only=True)
 
 
 class PerformanceSerializer(serializers.ModelSerializer):
